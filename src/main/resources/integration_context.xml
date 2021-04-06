@@ -16,7 +16,7 @@
         http://www.springframework.org/schema/integration/spring-integration-5.2.xsd">
     
     <int-file:inbound-channel-adapter
-            directory="file:src/test"
+            directory="file:src/test/read"
             filename-pattern="sample.txt"
             channel="inboundChannel">
         <int:poller fixed-rate="5000"/>
@@ -24,7 +24,10 @@
 
     <int:channel id="inboundChannel"/>
 
-    <bean id="filePrinter" class="ru.volkov.integration.files.FilePrinter"/>
-
-    <int:service-activator ref="filePrinter" method="print" input-channel="inboundChannel"/>
+    <int-file:outbound-channel-adapter
+        directory="file:src/test/write"
+        channel="inboundChannel"
+        auto-create-directory="true"
+        mode="REPLACE"
+        delete-source-files="true"/>
 </beans>
