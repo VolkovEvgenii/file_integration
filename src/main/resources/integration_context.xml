@@ -24,10 +24,16 @@
 
     <int:channel id="inboundChannel"/>
 
-    <int-file:outbound-channel-adapter
+    <int-file:file-to-string-transformer input-channel="inboundChannel" output-channel="transformChannel"/>
+    <int:channel id="transformChannel"/>
+
+    <int:service-activator ref="printService" method="print" input-channel="transformChannel"/>
+    <bean id="printService" class="ru.volkov.integration.files.FilePrinter"/>
+
+<!--    <int-file:outbound-channel-adapter
         directory="file:src/test/write"
         channel="inboundChannel"
         auto-create-directory="true"
         mode="REPLACE"
-        delete-source-files="true"/>
+        delete-source-files="true"/>-->
 </beans>
